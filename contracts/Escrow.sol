@@ -46,10 +46,14 @@ contract Escrow is Ownable {
     mapping(address => uint256) public numOfNftStaked;
     address[] public borrowers;
     mapping(address => uint256) public borrowerIndex;
-    // mapping nft address -> nft id -> { loanPeriod, repayAmount, holderAddress}
+    // mapping nft address -> nft id -> { expireTime, repayAmount, holderAddress}
     mapping(address => mapping(uint256 => uint256)) public nftLoanRepayAmount;
     mapping(address => mapping(uint256 => uint256)) public nftLoanExpireTime;
     mapping(address => mapping(uint256 => address)) public nftLoanHolderAddress;
+    // mapping nft address -> nft id -> { loanPeriod, loanAmount, loanInterest}
+    mapping(address => mapping(uint256 => uint256)) public nftLoanAmount; // unit: wei
+    mapping(address => mapping(uint256 => uint256)) public nftLoanPeriod; // unit: days
+    mapping(address => mapping(uint256 => uint256)) public nftLoanInterest; // decimals: 4
 
     constructor(address _dappTokenAddress) public {
         dappToken = IERC20(_dappTokenAddress);
@@ -124,13 +128,40 @@ contract Escrow is Ownable {
         numOfNftStaked[msg.sender] = numOfNftStaked[msg.sender] + 1;
     }
 
+    function setOffers(
+        address _nftAddress,
+        uint256 _nftId,
+        uint256 _loanAmount,
+        uint256 _loanPeriod,
+        uint256 _loanInterest
+    ) public onlyOwner {
+        nftLoanAmount[_nftAddress][_nftId] = _loanAmount;
+        nftLoanInterest[_nftAddress][_nftId] = _loanInterest;
+        nftLoanPeriod[_nftAddress][_nftId] = _loanPeriod;
+    }
+
+    function getOffers(address _nftAddress, uint256 _nftId)
+        public
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256
+        )
+    {
+        uint256 loan_amount = nftLoanAmount[_nftAddress][_nftId];
+        uint256 loan_interest = nftLoanInterest[_nftAddress][_nftId];
+        uint256 loan_period = nftLoanPeriod[_nftAddress][_nftId];
+        return (loan_amount, loan_period, loan_interest);
+    }
+
     function nftLock(
         address _nftAddress,
         uint256 _nftId,
         address _holderAddress,
         uint256 _expireTime,
         uint256 _repayAmount
-    ) public {
+    ) public onlyOwner {
         // nft lock parameters setting, is the function public ok?
         nftLoanHolderAddress[_nftAddress][_nftId] = _holderAddress;
         nftLoanExpireTime[_nftAddress][_nftId] = _expireTime;

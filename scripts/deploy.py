@@ -57,10 +57,11 @@ def deploy_escrow_and_tokens_and_nfts():
     # tx = escrow.requestLoan(a_nft.address, 0, 1, 3, 100, {"from": account})
     # tx.wait()
     # simple_nft.approve(account.address, 0, {"from": account}) ERROR: approve to current owner
-    simple_nft.approve(escrow.address, 0, {"from": account})
+    simple_nft_id = 0
+    simple_nft.approve(escrow.address, simple_nft_id, {"from": account})
     tx = escrow.nftStaking(
         simple_nft.address,
-        0,
+        simple_nft_id,
         {
             "from": account,  # it's not the approval problem that make us cannt pass here
             # "gas_price": 0,
@@ -70,9 +71,15 @@ def deploy_escrow_and_tokens_and_nfts():
     )
     tx.wait(1)
 
-    loan_amount = Web3.toWei(0.04, "ether")
-    loan_days = 3
-    loan_interest = 28
+    loan_Amount = Web3.toWei(0.04, "ether")
+    loan_Days = 3
+    loan_Interest = 28
+    escrow.setOffers(
+        simple_nft.address, simple_nft_id, loan_Amount, loan_Days, loan_Interest
+    )
+    loan_amount, loan_days, loan_interest = escrow.getOffers(
+        simple_nft.address, simple_nft_id
+    )
     loan_token.approve(escrow.address, loan_amount, {"from": account})
     tx = escrow.loanTransfer(
         loan_token.address, account, loan_amount, {"from": account}
@@ -86,7 +93,12 @@ def deploy_escrow_and_tokens_and_nfts():
     expireTime = initTime + loan_days * 24 * 60 * 60
     repayAmount = loan_amount * (1 + loan_interest / (10000))
     tx = escrow.nftLock(
-        simple_nft.address, 0, account, expireTime, repayAmount, {"from": account}
+        simple_nft.address,
+        simple_nft_id,
+        account,
+        expireTime,
+        repayAmount,
+        {"from": account},
     )
     tx.wait(1)
     time.sleep(1)

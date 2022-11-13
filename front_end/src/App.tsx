@@ -9,7 +9,7 @@ const config: Config = {
   networks: [Goerli],
   readOnlyChainId: Goerli.chainId,
   readOnlyUrls: {
-    [Mainnet.chainId]: getDefaultProvider('mainnet'),
+    //[Mainnet.chainId]: getDefaultProvider('mainnet'),
     [Goerli.chainId]: 'https://goerli.infura.io/v3/04586e9cd0484ad18018ca61d9da4c76',
   },
   notifications: {

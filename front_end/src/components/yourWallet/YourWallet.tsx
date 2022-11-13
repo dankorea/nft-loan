@@ -5,7 +5,7 @@ import Box from '@mui/material/Box'
 import Tab from '@mui/material/Tab'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import { WalletBalance } from "./WalletBalance"
-//import { StakeForm } from "./StakeForm"
+import { StakeForm } from "./StakeForm"
 
 interface YourWalletProps {
     supportedTokens: Array<Token>
@@ -40,7 +40,7 @@ export const YourWallet = ({ supportedTokens }: YourWalletProps) => {
                             <TabPanel value={index.toString()} key={index}>
                                 <div>
                                     <WalletBalance token={supportedTokens[selectedTokenIndex]} />
-
+                                    <StakeForm token={supportedTokens[selectedTokenIndex]} />
                                 </div>
                             </TabPanel>
                         )

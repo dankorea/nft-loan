@@ -1,0 +1,16 @@
+{
+  "contracts": {
+    "DappToken": "e898b251d9b8aa24366adb52c2a229b29d617a9e",
+    "Escrow": "9be496f33913b8e2835d0804b1dc5aa4dd2d725f",
+    "LoanToken": "166d2603bd29796e58efdff040a212da73c9234d",
+    "MockANFT": "144ea61cc87eed9a47fa8b57a7f99af2f2d4c7df",
+    "MockBNFT": "30c149dad91435547a737811cac1c284fa0626da",
+    "MockV3Aggregator": "d7e22265a7b4d18cff57273e18df2660683976a2",
+    "OpenZeppelin/openzeppelin-contracts@4.7.0/ERC721": "e9191044cbcdc6d3f46aecd8d29c98b2f2b059a2",
+    "OpenZeppelin/openzeppelin-contracts@4.7.0/Strings": "1ce946f6a4eaa185320328620ccf999b9e86db7c",
+    "OpenZeppelin/openzeppelin-contracts@4.7.3/ERC20": "38166fcfbc8e730a0752b73e497cde48b5457655",
+    "SimpleNFT": "0ef9e3ed7bfed7e0e29a3bc20713cd842c141ac1"
+  },
+  "tests": {},
+  "tx": {}
+}

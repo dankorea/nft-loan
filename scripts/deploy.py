@@ -3,12 +3,34 @@ from brownie import DappToken, Escrow, SimpleNFT, network, config
 from web3 import Web3
 import time
 
+import yaml
+import json
+import os
+import shutil
+
 sample_token_uri = (
     "ipfs://Qmd9MCGtdVz2miNumBHDbvj8bigSgTwnr4SbyH6DNnpWdt?filename=0-PUG.json"
 )
 
 KEPT_BALANCE = Web3.toWei(1000, "ether")
 KEPT_LOAT_BALANCE = Web3.toWei(0.05, "ether")
+
+
+def update_front_end():
+    # sending the build folder
+    copy_folders_to_front_end("./build", "./front_end/src/chain-info")
+    # sending the front end our config in JSON format
+    with open("brownie-config.yaml", "r") as brownie_config:
+        config_dict = yaml.load(brownie_config, Loader=yaml.FullLoader)
+        with open("./front_end/src/brownie-config.json", "w") as brownie_config_json:
+            json.dump(config_dict, brownie_config_json)
+    print("front end updated")
+
+
+def copy_folders_to_front_end(src, dest):
+    if os.path.exists(dest):
+        shutil.rmtree(dest)
+    shutil.copytree(src, dest)
 
 
 def deploy_escrow_and_tokens_and_nfts():

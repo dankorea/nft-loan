@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import { useContractFunction, useEthers } from "@usedapp/core"
 import { constants, utils } from "ethers"
 import Escrow from "../chain-info/contracts/Escrow.json"
@@ -17,8 +18,20 @@ export const useStakeTokens = (tokenAddress: string) => {
     const erc721Contract = new Contract(tokenAddress, erc721Interface)
     // stake nfts
     const { send: approveErc721Send, state: approveErc721State } = useContractFunction(erc721Contract, "approve", { transactionName: "Approve ERC721 transfer" })
-    const approve = (index: string) => {
+    const approveAndStake = (index: string) => {
+        setIndexToStake(index)
         return approveErc721Send(escrowAddress, index)
     }
-    return { approve, approveErc721State }
+
+    const { send: stakeSend, state: stakeState } = useContractFunction(escrowContract, "nftStaking", { transactionName: "nft staking" })
+    const [indexToStake, setIndexToStake] = useState("0")
+    // useEffect
+    useEffect(() => {
+        if (approveErc721State.status === "Success") {
+            // stake function
+            stakeSend(tokenAddress, indexToStake)
+        }
+    }, [approveErc721State])
+
+    return { approveAndStake, approveErc721State }
 }   

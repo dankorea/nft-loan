@@ -69,12 +69,17 @@ window.onload = async () => {
   }
 };
 
+var brownieConfig = require('../contracts/brownie-config.json')
 // tokens init
+const chainId = web3.eth.chainId
+var helperConfig = require('../contracts/helper-config.json')
+const networkName = chainId ? helperConfig[chainId] : "dev"
+networkMapping = require('../contracts/map.json')
 
+const nftAddress = networkMapping[chainId]["SimpleNFT"][0];
 const nftJson = require("../contracts/SimpleNFT.json");
-const nftAddress = "123";
-const nft = new web3.eth.Contract(nftJson);
+const nft = new web3.eth.Contract(nftJson, nftAddress);
 
-const tokenJson = require("../contracts/SimpleNFT.json");
-const tokenAddress = "345";
-const token = new web3.eth.Contract(tokenJson);
+const tokenAddress = chainId ? brownieConfig["networks"][networkName]["loan_token"] : "0x0000000000000000";
+const tokenJson = require("../contracts/MockLoanToken.json");
+const token = new web3.eth.Contract(tokenJson, tokenAddress);

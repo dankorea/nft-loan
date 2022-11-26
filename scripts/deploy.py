@@ -67,11 +67,11 @@ def deploy_escrow_and_tokens_and_nfts():
     print(escrow.numOfNftStaked(account))
     # loan_token: weth, simple_nft, a_nft - doggie3, b_nft - doggie1
     # pricefeed: loan_token - eth/usd,simple_nft - eth/usd, a_nft - dai/usd, b_nft - btc/usd
-    # a_nft = get_contract("a_nft")
+    a_nft = get_contract("a_nft")
     # b_nft = get_contract("b_nft")
     dict_of_allowed_nfts = {
         simple_nft: get_contract("simple_nft_price_feed"),
-        # a_nft: get_contract("a_nft_price_feed"),
+        a_nft: get_contract("a_nft_price_feed"),
         # b_nft: get_contract("b_nft_price_feed"),
     }
     add_allowed_nfts(escrow, dict_of_allowed_nfts, account)
@@ -146,10 +146,19 @@ def deploy_escrow_and_tokens_and_nfts():
     print(loan_token.balanceOf(escrow.address))
     print(escrow.numOfNftStaked(account))
 
+    print(escrow.allowedNfts(0))
+    print(escrow.allowedNfts(1))
+    print(escrow.numOfAllowedNfts())
+    escrow.updateAllowedNfts(simple_nft.address, False, {"from": account})
+    print(escrow.allowedNfts(0))
+    print(escrow.numOfAllowedNfts())
+    # return escrow, simple_nft, dapp_token, loan_token
+
 
 def add_allowed_nfts(escrow, dict_of_allowed_nfts, account):
+    update = True
     for nft in dict_of_allowed_nfts:
-        add_tx = escrow.addAllowedNfts(nft.address, {"from": account})
+        add_tx = escrow.updateAllowedNfts(nft.address, update, {"from": account})
         add_tx.wait(1)
         set_tx = escrow.setPriceFeedContract(
             nft.address, dict_of_allowed_nfts[nft], {"from": account}

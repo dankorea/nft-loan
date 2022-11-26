@@ -28,6 +28,7 @@ export const Main = () => {
     const simpleNftAddress = chainId ? networkMapping[String(chainId)]["SimpleNFT"][0] : constants.AddressZero
     const escrowAddress = chainId ? networkMapping[String(chainId)]["Escrow"][0] : constants.AddressZero
     const loanTokenAddress = chainId ? brownieConfig["networks"][networkName]["loan_token"] : constants.AddressZero
+    // loanTokenAddress here in fact is the contract address
 
     const supportedTokens: Array<Token> = [
         {

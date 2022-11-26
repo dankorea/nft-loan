@@ -65,6 +65,25 @@ def test_loan_transfer(amount_stake):
         escrow.loanTransfer(account, loan_amount, {"from": non_owner})
 
 
+def test_update_allowed_nfts():
+    # Arrange
+    if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
+        pytest.skip("only for local testing")
+    account = get_account()  # the account here is not the owner of the following
+    non_owner = get_account(index=1)
+    escrow, simple_nft, dapp_token, loan_token = deploy_escrow_and_tokens_and_nfts()
+    nft_address = "0x06c586B4a9f95d6480cf6Ab66Ae16C3A391D7F02"
+    # Act
+    update = True
+    escrow.updateAllowedNfts(nft_address, update, {"from": account})
+    # len = escrow.allowedNfts.length()
+    # assert
+    # print(len)
+    print(escrow.allowedNfts(0))
+
+    # assert escrow.nftIsAllowed(nft_address, {"from": account})
+
+
 def test_issue_tokens():
     pass
 
